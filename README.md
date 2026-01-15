@@ -1,89 +1,155 @@
 # Security Headers Checker
 
-A Python tool that analyzes websites for missing security headers and provides a security score.
+A professional-grade Python tool that analyzes websites for missing security headers, provides weighted scoring, and exports detailed JSON reports.
 
 ## What it does
 
-This tool checks websites for essential security headers that protect against common web attacks like:
-- Clickjacking
-- XSS (Cross-Site Scripting)
-- MIME type sniffing
-- Man-in-the-middle attacks
+This tool checks websites for essential security headers that protect against common web attacks:
+- **XSS (Cross-Site Scripting)**
+- **Clickjacking**
+- **MIME type sniffing**
+- **Man-in-the-middle attacks**
+- **Content injection**
 
 ## Features
 
-- Scans 7 critical security headers
-- Provides detailed explanations for each header
-- Calculates overall security score
-- Shows which headers are present/missing
-- Easy to use command-line interface
+- **Weighted scoring system** - Critical headers like CSP have higher weight
+- **JSON export** - Generate machine-readable reports for automation
+- **Multiple output formats** - Human-readable console output or JSON
+- **Flexible CLI options** - Timeout, redirects, custom user-agent, and more
+- **Professional ratings** - Strong/Moderate/Weak based on security posture
+- **Quiet mode** - Perfect for CI/CD pipelines
 
-## How to use
+## Installation
 
 **Requirements:**
-- Python 3.x
+- Python 3.7+
 - requests library
 
-**Installation:**
+**Setup:**
 ```bash
 git clone https://github.com/Smriti-ss/security-headers-checker.git
 cd security-headers-checker
 pip install requests
 ```
 
-**Usage:**
+## Usage
+
+### Basic scan:
 ```bash
 python security_checker.py https://example.com
 ```
 
+### Export to JSON:
+```bash
+python security_checker.py https://example.com --json report.json --pretty
+```
+
+### Follow redirects:
+```bash
+python security_checker.py http://example.com --follow-redirects
+```
+
+### Quiet mode (just the score):
+```bash
+python security_checker.py https://example.com --quiet
+```
+
+### All options:
+```bash
+python security_checker.py https://example.com \
+  --timeout 15 \
+  --follow-redirects \
+  --json report.json \
+  --pretty
+```
+
+## Command-Line Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--timeout` | Request timeout in seconds | 10 |
+| `--no-verify` | Disable TLS certificate verification | False |
+| `--follow-redirects` | Follow HTTP redirects | False |
+| `--user-agent` | Custom User-Agent string | security-headers-checker/1.0 |
+| `--json` | Export report to JSON file | None |
+| `--pretty` | Pretty-print JSON output | False |
+| `--quiet` | Minimal output (score only) | False |
+
 ## Example Output
+
+### Console Output:
 ```
-============================================================
-       SECURITY HEADERS CHECKER
-============================================================
+🔎 Scanning: https://twitter.com
+↪️  Final URL: https://twitter.com/
+📡 Status: 301
 
-Security Headers Analysis for: https://google.com
-Scan Time: 2026-01-15 00:12:49
+Score: 83.3%  (Moderate)
+Headers found: 4 | Missing: 2 | Total checked: 6
 
-✓ PRESENT HEADERS:
-------------------------------------------------------------
-  X-Frame-Options
-    Value: SAMEORIGIN
-    Purpose: Protects against clickjacking
+Found headers:
+  - Strict-Transport-Security
+  - Content-Security-Policy
+  - X-Frame-Options
+  - X-Content-Type-Options
 
-✗ MISSING HEADERS:
-------------------------------------------------------------
-  Strict-Transport-Security
-    Purpose: Enforces HTTPS connections
-    
-============================================================
-SECURITY SCORE: 28.6%
-============================================================
-⚠️  WARNING: This site has weak security header configuration
+Missing headers:
+  - Referrer-Policy
+  - Permissions-Policy
 ```
 
-## 🔍 Headers Checked
+### JSON Output:
+The tool can export detailed JSON reports containing:
+- Scan metadata and configuration
+- Target URL information
+- All response headers
+- Detailed analysis with weights
+- Security score and rating
 
-| Header | Purpose |
-|--------|---------|
-| Strict-Transport-Security | Enforces HTTPS connections |
-| X-Content-Type-Options | Prevents MIME type sniffing |
-| X-Frame-Options | Protects against clickjacking |
-| X-XSS-Protection | Enables XSS filter in browsers |
-| Content-Security-Policy | Controls resource loading |
-| Referrer-Policy | Controls referrer information |
-| Permissions-Policy | Controls browser features |
+## Headers Checked (with weights)
+
+| Header | Weight | Purpose |
+|--------|--------|---------|
+| **Content-Security-Policy** | 4 | Mitigates XSS and content injection |
+| **Strict-Transport-Security** | 3 | Enforces HTTPS via HSTS |
+| **X-Frame-Options** | 2 | Mitigates clickjacking |
+| **X-Content-Type-Options** | 1 | Prevents MIME-sniffing |
+| **Referrer-Policy** | 1 | Controls referrer info leakage |
+| **Permissions-Policy** | 1 | Restricts browser features |
+
+**Total Weight:** 12 points
+
+## Scoring System
+
+- **Strong (85%+):** Excellent security header configuration
+- **Moderate (60-84%):** Good security, some improvements possible
+- **Weak (<60%):** Significant security headers missing
 
 ## Why I built this
 
-Security headers are often overlooked but critical for web application security. I created this tool to quickly audit websites and raise awareness about these important security configurations.
+Security headers are often overlooked but critical for web application security. I created this tool to:
+- Quickly audit websites and APIs
+- Integrate security checks into CI/CD pipelines
+- Raise awareness about security header best practices
+- Provide actionable insights with weighted scoring
 
 ## What I learned
 
-- Working with HTTP headers and requests
-- Security best practices for web applications
-- Building CLI tools in Python
-- Understanding common web vulnerabilities
+- **Security best practices:** Understanding the role of each security header
+- **Python development:** Type hints, argparse, modular design
+- **CLI tool design:** Building user-friendly command-line interfaces
+- **Data formats:** JSON export for automation and integration
+- **Web security:** Common vulnerabilities and mitigation strategies
+
+## Contributing
+
+Found a bug or have a feature request? Feel free to open an issue!
+
+## 📄 License
+
+This project is open source and available for educational purposes.
+
+---
 
 ## Connect with me
 
